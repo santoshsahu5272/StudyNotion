@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
 
@@ -31,6 +31,7 @@ function Course_Slider({ Courses }) {
         >
           {Courses?.map((course, i) => (
             <SwiperSlide key={i}>
+              {/* eslint-disable-next-line react/jsx-pascal-case */}
               <Course_Card course={course} Height={"h-[250px]"} />
             </SwiperSlide>
           ))}
