@@ -218,7 +218,8 @@ exports.sendotp = async (req, res) => {
     
     // Send email with OTP asynchronously (non-blocking)
     mailSender(email, "Verification Email from StudyNotion", otpTemplate(otp))
-      .catch((error) => console.log("Error sending OTP email:", error.message))
+      .then((result) => console.log("✅ OTP Email sent successfully"))
+      .catch((error) => console.error("❌ Error sending OTP email:", error.message || error))
     
     res.status(200).json({
       success: true,
