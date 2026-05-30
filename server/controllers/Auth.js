@@ -216,8 +216,9 @@ exports.sendotp = async (req, res) => {
     const otpBody = await OTP.create(otpPayload)
     console.log("OTP Body", otpBody)
     
-    // Send email with OTP
-    await mailSender(email, "Verification Email from StudyNotion", otpTemplate(otp))
+    // Send email with OTP asynchronously (non-blocking)
+    mailSender(email, "Verification Email from StudyNotion", otpTemplate(otp))
+      .catch((error) => console.log("Error sending OTP email:", error.message))
     
     res.status(200).json({
       success: true,
@@ -259,26 +260,17 @@ exports.changePassword = async (req, res) => {
       { new: true }
     )
 
-    // Send notification email
-    try {
-      const emailResponse = await mailSender(
+    // Send notification email asynchronously (non-blocking)
+    mailSender(
+      updatedUserDetails.email,
+      "Password for your account has been updated",
+      passwordUpdated(
         updatedUserDetails.email,
-        "Password for your account has been updated",
-        passwordUpdated(
-          updatedUserDetails.email,
-          `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
-        )
+        `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
       )
-      console.log("Email sent successfully:", emailResponse.response)
-    } catch (error) {
-      // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
-      console.error("Error occurred while sending email:", error)
-      return res.status(500).json({
-        success: false,
-        message: "Error occurred while sending email",
-        error: error.message,
-      })
-    }
+    )
+      .then(() => console.log("Email sent successfully"))
+      .catch((error) => console.error("Error occurred while sending email:", error))
 
     // Return success response
     return res
