@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 
 import "video-react/dist/video-react.css"
@@ -15,6 +15,7 @@ const VideoDetails = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const playerRef = useRef(null)
+  const dispatch = useDispatch() // eslint-disable-line no-unused-vars
   const { token } = useSelector((state) => state.auth)
   const { courseSectionData, courseEntireData, completedLectures } =
     useSelector((state) => state.viewCourse)
