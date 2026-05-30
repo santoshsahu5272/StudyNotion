@@ -4,6 +4,7 @@ const OTP = require("../models/OTP")
 const jwt = require("jsonwebtoken")
 const otpGenerator = require("otp-generator")
 const mailSender = require("../utils/mailSender")
+const otpTemplate = require("../mail/templates/emailVerificationTemplate")
 const { passwordUpdated } = require("../mail/templates/passwordUpdate")
 const Profile = require("../models/Profile")
 require("dotenv").config()
@@ -214,6 +215,10 @@ exports.sendotp = async (req, res) => {
     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)
     console.log("OTP Body", otpBody)
+    
+    // Send email with OTP
+    await mailSender(email, "Verification Email from StudyNotion", otpTemplate(otp))
+    
     res.status(200).json({
       success: true,
       message: `OTP Sent Successfully`,
