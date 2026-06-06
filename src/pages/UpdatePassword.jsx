@@ -31,6 +31,9 @@ function UpdatePassword() {
   const handleOnSubmit = (e) => {
     e.preventDefault()
     const token = location.pathname.split("/").at(-1)
+    console.log("UpdatePassword - Token from URL:", token)
+    console.log("Token length:", token ? token.length : 0)
+    console.log("Full URL:", window.location.href)
     dispatch(resetPassword(password, confirmPassword, token, navigate))
   }
 

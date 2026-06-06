@@ -55,6 +55,10 @@ exports.resetPasswordToken = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     const { password, confirmPassword, token } = req.body
+    
+    console.log("Reset Password Request - Token received:", token)
+    console.log("Token type:", typeof token)
+    console.log("Token length:", token ? token.length : "null")
 
     if (confirmPassword !== password) {
       return res.json({
@@ -63,7 +67,14 @@ exports.resetPassword = async (req, res) => {
       })
     }
     const userDetails = await User.findOne({ token: token })
+    console.log("User found with token:", userDetails ? userDetails.email : "NOT FOUND")
     if (!userDetails) {
+      // Try to find all users with any token to debug
+      const allUsersWithTokens = await User.find({ token: { $exists: true, $ne: null } })
+      console.log("Total users with tokens in DB:", allUsersWithTokens.length)
+      if (allUsersWithTokens.length > 0) {
+        console.log("Sample tokens in DB:", allUsersWithTokens.slice(0, 3).map(u => ({ email: u.email, token: u.token.substring(0, 10) + "..." })))
+      }
       return res.json({
         success: false,
         message: "Token is Invalid",
