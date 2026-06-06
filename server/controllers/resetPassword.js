@@ -22,7 +22,8 @@ exports.resetPasswordToken = async (req, res) => {
       },
       { new: true }
     )
-    console.log("DETAILS", updatedDetails)
+    console.log("Password Reset Token Generated for:", email)
+    console.log("Token expires at:", new Date(Date.now() + 3600000))
 
     // const url = `http://localhost:3000/update-password/${token}`
     const url = `https://studynotion-edtech-project.vercel.app/update-password/${token}`
@@ -31,9 +32,10 @@ exports.resetPasswordToken = async (req, res) => {
     mailSender(
       email,
       "Password Reset",
-      `Your Link for email verification is ${url}. Please click this url to reset your password.`
+      `Your Link for password reset is ${url}. Please click this url to reset your password.`
     )
-      .catch((error) => console.error("Error sending reset password email:", error))
+      .then(() => console.log("✅ Reset password email sent successfully to:", email))
+      .catch((error) => console.error("❌ Error sending reset password email:", error))
 
     res.json({
       success: true,
@@ -41,6 +43,7 @@ exports.resetPasswordToken = async (req, res) => {
         "Email Sent Successfully, Please Check Your Email to Continue Further",
     })
   } catch (error) {
+    console.error("Reset Password Token Error:", error)
     return res.json({
       error: error.message,
       success: false,
@@ -73,16 +76,22 @@ exports.resetPassword = async (req, res) => {
       })
     }
     const encryptedPassword = await bcrypt.hash(password, 10)
-    await User.findOneAndUpdate(
+    const updatedUser = await User.findOneAndUpdate(
       { token: token },
-      { password: encryptedPassword },
+      { 
+        password: encryptedPassword,
+        token: undefined,
+        resetPasswordExpires: undefined,
+      },
       { new: true }
     )
+    console.log("Password Reset Success for user:", updatedUser.email)
     res.json({
       success: true,
       message: `Password Reset Successful`,
     })
   } catch (error) {
+    console.error("Password Reset Error:", error)
     return res.json({
       error: error.message,
       success: false,
