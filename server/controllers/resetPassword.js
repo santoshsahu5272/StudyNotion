@@ -26,7 +26,7 @@ exports.resetPasswordToken = async (req, res) => {
     console.log("Token expires at:", new Date(Date.now() + 3600000))
 
     // const url = `http://localhost:3000/update-password/${token}`
-    const url = `https://studynotion-edtech-project.vercel.app/update-password/${token}`
+    const url = `https://study-notion-flame-eta.vercel.app/update-password/${token}`
 
     // Send reset password email asynchronously (non-blocking)
     mailSender(
