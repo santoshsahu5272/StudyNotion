@@ -32,6 +32,7 @@ function Template({ title, description1, description2, image, formType }) {
               width={558}
               height={504}
               loading="lazy"
+              className="absolute inset-0"
             />
             <img
               src={image}
@@ -39,7 +40,7 @@ function Template({ title, description1, description2, image, formType }) {
               width={558}
               height={504}
               loading="lazy"
-              className="absolute -top-4 right-4 z-10"
+              className="relative z-10"
             />
           </div>
         </div>
